@@ -53,7 +53,7 @@ def clip_gen(base_footage_path, clip_count, outro_clip_path, base_length, base_f
                                        padding=-crossfade)
         
         # Insert Clip number
-        filename = base_filename.replace("___",  "_" + str(clip_index) + "_") + ".mp4"
+        filename = base_filename.replace("___",  "_" + str(clip_count) + "_") + ".mp4"
         
         # write final clip
         final.write_videofile(filename= filename, fps=base_fps)
