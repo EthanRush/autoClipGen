@@ -34,15 +34,20 @@ def clip_gen(base_footage_path, clip_len, outro_clip_path, output_path=None):
         base_footage = VideoFileClip(base_footage_path)
         # Create object for outro clip
         outro_clip = VideoFileClip(outro_clip_path)
+        outro_clip = outro_clip.resize((1080,1092))
+
         start_time = i*base_length
         end_time = start_time + base_length
         # getting subclip from base footage
         base_clip = base_footage.subclip(start_time, end_time)
-       
-        
+        base_clip = base_clip.audio_fadeout(crossfade)
+        base_clip = base_clip.resize((1080,1920))
+
 
         # creating a composite video
-        final = CompositeVideoClip([base_clip.crossfadeout(crossfade+1), outro_clip.set_start(base_clip.duration-crossfade).crossfadein(crossfade)])
+        final = concatenate_videoclips(clips=[base_clip.fx(transfx.crossfadeout,crossfade), outro_clip.set_start(base_clip.duration-crossfade).fx(transfx.crossfadein,crossfade)],
+                                       method="compose",
+                                       padding=-crossfade)
        
         
         # showing final clip
@@ -57,11 +62,17 @@ def clip_gen(base_footage_path, clip_len, outro_clip_path, output_path=None):
         base_footage = VideoFileClip(base_footage_path)
         # Create object for outro clip
         outro_clip = VideoFileClip(outro_clip_path)
-        base_clip = base_footage.subclip((ind)*base_length)
-          
+        outro_clip = outro_clip.resize((1080,1920))
 
+        base_clip = base_footage.subclip((ind)*base_length)
+        base_clip = base_clip.audio_fadeout(crossfade)
+        base_clip = base_clip.resize((1080,1920))
+
+        
         # creating a composite video
-        final = CompositeVideoClip([base_clip.crossfadeout(crossfade+1), outro_clip.set_start(base_clip.duration-crossfade).crossfadein(crossfade)])
+        final = concatenate_videoclips(clips=[base_clip.fx(transfx.crossfadeout,crossfade), outro_clip.set_start(base_clip.duration-crossfade).fx(transfx.crossfadein,crossfade)],
+                                       method="compose",
+                                       padding=-crossfade)
         
         
         # showing final clip
