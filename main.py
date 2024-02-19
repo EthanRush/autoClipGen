@@ -4,7 +4,7 @@ from moviepy.editor import *
 import multiprocessing as mp
 CLIP_LENGTH = 30
 if __name__ == '__main__':  
-    
+    # Create object for base footage
     base_footage = VideoFileClip(base_footage_path)
     # Create object for outro clip
     outro_clip = VideoFileClip(outro_clip_path)
@@ -15,19 +15,20 @@ if __name__ == '__main__':
     if(output_path is not None):
         base_filename = base_filename.split("/")[-1]
         base_filename = base_filename.split("\\")[-1]
-        base_filename = output_path + base_filename
+        base_filename = output_path + "part___" + base_filename
     #how long from base footage to cut for each clip
     base_length = (CLIP_LENGTH - outro_clip.duration)
+    # Cant pass footage objects to parallel function, close and reopen in each process
+    outro_clip.close()
 
     # how many clips can be greated evenly
     clip_count = int(base_footage.duration / base_length)
-    process_ct = min(max(mp.cpu_count() - 2, 1), clip_count)
-    ind = 0
-    #loop through and create clips
-    outro_clip = outro_clip.resize((1080,1092))
+    # Cant pass footage objects to parallel function, close and reopen in each process
     base_footage.close()
-    outro_clip.close()
-
+    # To avoid overwhelming CPU, only create max cores - 2 processes, or the number of clips (whichever is less)
+    process_ct = min(max(mp.cpu_count() - 2, 1), clip_count)
+    
+    # if multiple processes, run pool, else just run the single process version
     if process_ct > 1:
         pool = mp.Pool(process_ct) 
         for x in range(0, clip_count):
