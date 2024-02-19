@@ -1,2 +1,5 @@
-./clip_paths.py
-./test.py
+clip_paths.py
+*
+!main.py
+!clip_gen.py
+!READEME.md
