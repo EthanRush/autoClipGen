@@ -26,7 +26,7 @@ if __name__ == '__main__':
     # Cant pass footage objects to parallel function, close and reopen in each process
     base_footage.close()
     # To avoid overwhelming CPU, only create max cores - 2 processes, or the number of clips (whichever is less)
-    process_ct = min(max(mp.cpu_count() - 2, 1), clip_count)
+    process_ct = min(max(int(mp.cpu_count() / 2), 1), clip_count)
     
     # if multiple processes, run pool, else just run the single process version
     if process_ct > 1:
