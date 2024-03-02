@@ -94,7 +94,7 @@ def clip_gen_parallel(base_footage_path, clip_index, outro_clip_path, base_lengt
     filename = base_filename.replace("___",  "_" + str(clip_index) + "_") + ".mp4"
 
     # write final clip
-    final.write_videofile(filename, base_fps)
+    final.write_videofile(filename, fps=base_fps, audio_codec="aac")
 
     # close files
     base_clip.close()
